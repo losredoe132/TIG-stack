@@ -1,80 +1,40 @@
 version: '2'
-volumes:
-    node-red-data:
-    node-red-test-data:
-    influxdb-data:
 services:
-  influxdb:
-    build: influxdb
-    container_name: influxdb
-    # privileged added so usb drive can be mounted.
-    privileged: true
-    volumes:
-        # take care that the mount location "/mnt/influxdb" becomes overwritten
-        # by the mount location specified in the influxdb Dockerfile.
-        - 'influxdb-data:/mnt/influxdb'   
-    ports:
-      # The API for InfluxDB is served on port 8086
-      - "8082:8082"
-      - "8086:8086"
-      # UDP Port
-      - "8089:8089"
-    restart: always
+
   telegraf:
-    # Full tag list: https://hub.docker.com/r/library/telegraf/tags/
-    build : telegraf
+    image: telegraf
     pid: "host"
     network_mode: "host"
     privileged: true
-    labels:
-      io.resin.features.balena-socket: '1'
     depends_on:
       - influxdb
     restart: always
     environment:
        - interval=60s
        - flush_interval=60s
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  influxdb:
+    image: influxdb
+    ports:
+      - "8082:8082"
+      - "8086:8086"
+      - "8089:8089"
+    restart: always
+    volumes:
+      - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+      - ./influxdb/data:/mnt/influxdb
+
   grafana:
-    build: grafana 
+    image: grafana/grafana
     ports:
        - "3000:3000"
     depends_on:
        - influxdb
     restart: always
-  mqtt:
-    image: panuwitp/mosquitto-arm
-    ports:
-      - "1883:1883"
-  mqtt-test:
-    image: panuwitp/mosquitto-arm
-    ports:
-      - "1884:1883"
-  node-red:
-    build: node-red
     volumes:
-       - 'node-red-data:/data'
-    ports:
-       - "1880:1880"
-    depends_on:
-        - mqtt
-    restart: always
-  node-red-test:
-    build: node-red-test
-    volumes:
-       - 'node-red-test-data:/data'
-    ports:
-       - "1882:1880"
-    depends_on:
-        - mqtt-test
-    restart: always
-  nginx:
-    build : nginx
-    depends_on:
-      - grafana
-      - node-red
-      - node-red-test
-    ports:
-       - "80:80"
-       - "443:443"
-    restart: always
-
+      - ./grafana/config.ini:/etc/grafana/config.ini:ro
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
