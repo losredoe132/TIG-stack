@@ -1,0 +1,281 @@
+{
+    "annotations": {
+        "list": [
+            {
+                "builtIn": 1,
+                "datasource": "-- Grafana --",
+                "enable": true,
+                "hide": true,
+                "iconColor": "rgba(0, 211, 255, 1)",
+                "name": "Annotations & Alerts",
+                "target": {
+                    "limit": 100,
+                    "matchAny": false,
+                    "tags": [],
+                    "type": "dashboard"
+                },
+                "type": "dashboard"
+            }
+        ]
+    },
+    "editable": true,
+    "fiscalYearStartMonth": 0,
+    "graphTooltip": 0,
+    "id": 3,
+    "links": [],
+    "liveNow": false,
+    "panels": [
+        {
+            "datasource": {
+                "type": "mysql",
+                "uid": "PE08F4C9C36148019"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": [
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "duration {platform=\"soundcloud\", title=\"Premiere: Warnung - Bipolar [AKR007]\"}"
+                        },
+                        "properties": [
+                            {
+                                "id": "displayName",
+                                "value": "Soundcloud"
+                            },
+                            {
+                                "id": "max",
+                                "value": 20
+                            },
+                            {
+                                "id": "min",
+                                "value": 0
+                            }
+                        ]
+                    },
+                    {
+                        "matcher": {
+                            "id": "byName",
+                            "options": "duration {platform=\"youtube\", title=\"Warnung - Bipolar [AKR007]\"}"
+                        },
+                        "properties": [
+                            {
+                                "id": "displayName",
+                                "value": "Youtube"
+                            },
+                            {
+                                "id": "min",
+                                "value": 0
+                            },
+                            {
+                                "id": "max",
+                                "value": 20
+                            }
+                        ]
+                    }
+                ]
+            },
+            "gridPos": {
+                "h": 8,
+                "w": 21,
+                "x": 0,
+                "y": 0
+            },
+            "id": 4,
+            "options": {
+                "displayMode": "gradient",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showUnfilled": true
+            },
+            "pluginVersion": "8.4.0-beta1",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "mysql",
+                        "uid": "PE08F4C9C36148019"
+                    },
+                    "format": "time_series",
+                    "group": [],
+                    "metricColumn": "none",
+                    "rawQuery": true,
+                    "rawSql": "SELECT\n  timestamp AS \"time\",\n  avg(duration) as \"duration\",\n  title as \"title\",\n  platform as \"platform\"\nFROM song_data \nGROUP BY platform\nORDER BY timestamp",
+                    "refId": "A",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "duration"
+                                ],
+                                "type": "column"
+                            }
+                        ]
+                    ],
+                    "table": "song_data",
+                    "timeColumn": "timestamp",
+                    "timeColumnType": "timestamp",
+                    "where": [
+                        {
+                            "name": "$__timeFilter",
+                            "params": [],
+                            "type": "macro"
+                        }
+                    ]
+                }
+            ],
+            "title": "Seconds per request",
+            "transformations": [],
+            "type": "bargauge"
+        },
+        {
+            "datasource": {
+                "type": "mysql",
+                "uid": "PE08F4C9C36148019"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "points",
+                        "fillOpacity": 0,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    }
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 17,
+                "w": 21,
+                "x": 0,
+                "y": 8
+            },
+            "id": 2,
+            "options": {
+                "legend": {
+                    "calcs": [],
+                    "displayMode": "hidden",
+                    "placement": "bottom"
+                },
+                "tooltip": {
+                    "mode": "single",
+                    "sort": "none"
+                }
+            },
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "mysql",
+                        "uid": "PE08F4C9C36148019"
+                    },
+                    "format": "time_series",
+                    "group": [],
+                    "metricColumn": "none",
+                    "rawQuery": true,
+                    "rawSql": "SELECT\n  timestamp AS \"time\",\n  n_plays AS \"n_plays\", \n  song AS \"title\",\n  platform as \"platform\"\nFROM song_data\nORDER BY timestamp\n",
+                    "refId": "A",
+                    "select": [
+                        [
+                            {
+                                "params": [
+                                    "id"
+                                ],
+                                "type": "column"
+                            }
+                        ]
+                    ],
+                    "table": "song_data",
+                    "timeColumn": "timestamp",
+                    "timeColumnType": "timestamp",
+                    "where": [
+                        {
+                            "name": "$__timeFilter",
+                            "params": [],
+                            "type": "macro"
+                        }
+                    ]
+                }
+            ],
+            "title": "n_plays per song",
+            "type": "timeseries"
+        }
+    ],
+    "schemaVersion": 35,
+    "style": "dark",
+    "tags": [],
+    "templating": {
+        "list": []
+    },
+    "time": {
+        "from": "now-6h",
+        "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "max",
+    "uid": "0egm8MWgk",
+    "version": 1,
+    "weekStart": ""
+}
