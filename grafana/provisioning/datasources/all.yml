@@ -17,3 +17,11 @@ datasources:
   # is_default: true
   version: 1
   editable: true
+
+- name: 'mariadb'
+  type: mysql
+  url: 192.168.0.131:3306
+  database: scraper
+  user: reader
+  secureJsonData:
+    password: scrape
